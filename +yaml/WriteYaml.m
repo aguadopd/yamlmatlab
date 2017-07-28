@@ -21,6 +21,8 @@ if ~exist('flowstyle','var')
     javastruct = scan(data);
     dumperopts = DumperOptions();
     dumperopts.setLineBreak(        javaMethod('getPlatformLineBreak',        'org.yaml.snakeyaml.DumperOptions$LineBreak'));
+    % I think this could be simplified...
+    %    FLOW STYLE
     if flowstyle
         classes = dumperopts.getClass.getClasses;
         flds = classes(3).getDeclaredFields();
@@ -29,6 +31,9 @@ if ~exist('flowstyle','var')
             error(['Accessed another field instead of FLOW. Please correct',            'class/field indices (this error maybe caused by new snakeyaml version).']);
         end;
         dumperopts.setDefaultFlowStyle(fsfld.get([]));
+    else
+    %   DEFAULT BLOCK STYLE
+        dumperopts.setDefaultFlowStyle(javaMethod('valueOf','org.yaml.snakeyaml.DumperOptions$FlowStyle','BLOCK'));
     end;
     yaml = Yaml(dumperopts);
     output = yaml.dump(javastruct);
